@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name" translatable="false">PLUGD</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="role_selection">Role Selection</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+</resources>

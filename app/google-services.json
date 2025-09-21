@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "932853900157",
+    "project_id": "plugdapp",
+    "storage_bucket": "plugdapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932853900157:android:09d63c25d93b827771e214",
+        "android_client_info": {
+          "package_name": "com.example.plugd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932853900157-3i0o6nmelmbksvtojsd3jor9gltga2si.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNR_70bFeAZMeRtOWOUb4Cza_Zn35x7Es"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932853900157-3i0o6nmelmbksvtojsd3jor9gltga2si.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
