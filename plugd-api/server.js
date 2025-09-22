@@ -11,11 +11,12 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventsRoutes);
 
-// health
+// Health check
 app.get("/", (req, res) => res.send({ ok: true }));
 
 const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Plugd backend listening on ${port}`));
+app.listen(port, () => console.log(`Plugd API listening on ${port}`));

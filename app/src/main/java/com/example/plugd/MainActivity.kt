@@ -3,8 +3,12 @@ package com.example.plugd
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.example.plugd.data.hasSeenOnboarding
@@ -31,15 +35,17 @@ class MainActivity : ComponentActivity() {
                     SetupNavGraph(navController)
                 } else {
                     // Show onboarding first
-                    OnboardingScreen(navController = navController, onFinish = {
-                        // Save completion and navigate to login
-                        CoroutineScope(Dispatchers.IO).launch {
-                            saveOnboardingCompleted(context)
+                    OnboardingScreen(
+                        navController = navController,
+                        onFinish = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                saveOnboardingCompleted(context)
+                            }
+                            navController.navigate(Routes.LOGIN) {
+                                popUpTo(Routes.ONBOARDING) { inclusive = true }
+                            }
                         }
-                        navController.navigate(Routes.LOGIN) {
-                            popUpTo(Routes.ONBOARDING) { inclusive = true }
-                        }
-                    })
+                    )
                 }
             }
         }

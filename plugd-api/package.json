@@ -1,5 +1,5 @@
 {
-  "name": "plugd-backend",
+  "name": "plugd-api",  // <-- changed here
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
