@@ -6,11 +6,11 @@ data class Event(
     val eventId: String,
     val eventName: String,
     val description: String,
-    val category: String,               // e.g. Music, Sports, Food
+    val category: String,
     val startDateTime: Instant,
     val endDateTime: Instant,
-    val location: String,               // you can add lat/lng fields if needed
-    val ticketPrice: Double,            // 0.0 == free
+    val location: String,
+    val ticketPrice: Double,
     val capacity: Int,
     val organizerId: String
 )
