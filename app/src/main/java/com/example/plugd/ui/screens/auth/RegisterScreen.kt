@@ -2,6 +2,7 @@ package com.example.plugd.ui.screens.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -11,17 +12,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.plugd.ui.auth.GoogleAuthUiClient
 import com.example.plugd.ui.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.example.plugd.ui.utils.PreviewNavController
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun RegisterScreen(navController: NavHostController, role: String, googleAuthUiClient: GoogleAuthUiClient) {
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     val auth = FirebaseAuth.getInstance()
@@ -57,14 +59,11 @@ fun RegisterScreen(navController: NavHostController) {
                                     "name" to name,
                                     "username" to username,
                                     "email" to email,
-                                    "role" to "Artist" // or whatever the chosen role is
+                                    "role" to "User" // default role
                                 )
                             )
                         }
-
-                        // Navigate with role
-                        val userRole = "Artist" // replace with selected role
-                        navController.navigate("${Routes.HOME}?role=$userRole") {
+                        navController.navigate(Routes.LOGIN) {
                             popUpTo(Routes.REGISTER) { inclusive = true }
                         }
                     } else {
@@ -83,21 +82,7 @@ fun RegisterScreen(navController: NavHostController) {
 
         if (errorMessage.isNotEmpty()) {
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = errorMessage, color = androidx.compose.material3.MaterialTheme.colorScheme.error)
+            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
         }
-
     }
-}
-
-// Helper for preview
-@Composable
-fun rememberNavControllerPreview(): NavHostController {
-    return androidx.navigation.compose.rememberNavController()
-}
-
-// Preview function (outside of RegisterScreen)
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterScreen() {
-    RegisterScreen(navController = rememberNavControllerPreview())
 }

@@ -1,27 +1,59 @@
 package com.example.plugd.ui.screens.auth
 
+import android.content.IntentSender
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.plugd.security.BiometricLogin
-import com.example.plugd.ui.navigation.Routes
-import com.example.plugd.ui.utils.PreviewNavController
+import com.example.plugd.ui.auth.GoogleAuthUiClient
+import com.example.plugd.ui.screens.nav.BottomNavBar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.launch
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.plugd.ui.navigation.Routes
+import android.app.Activity
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    navController: NavHostController,
+    firebaseAuth: FirebaseAuth? = null,
+    googleAuthClient: GoogleAuthUiClient,
+    biometricLogin: (() -> Unit)? = null
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-    val auth = FirebaseAuth.getInstance()
-    val db = FirebaseDatabase.getInstance().reference
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val auth = firebaseAuth ?: FirebaseAuth.getInstance()
+
+    // 🔑 Place the launcher here (after scope and before UI)
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let { intent ->
+                scope.launch {
+                    val signInResult = googleAuthClient.signInWithIntent(intent)
+                    if (signInResult.data != null) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                    } else {
+                        errorMessage = signInResult.errorMessage ?: "Google Sign-in failed"
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -30,85 +62,62 @@ fun LoginScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+        // Email/Password
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation()
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔹 Login button
+        // Login button
         Button(onClick = {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val uid = auth.currentUser?.uid
-                        if (uid != null) {
-                            // fetch role from DB after login
-                            db.child("users").child(uid).get()
-                                .addOnSuccessListener { snapshot ->
-                                    val role = snapshot.child("role").value as? String ?: "Unknown"
-                                    navController.navigate("${Routes.HOME}?role=$role") {
-                                        popUpTo(Routes.LOGIN) { inclusive = true }
-                                    }
-                                }
-                                .addOnFailureListener {
-                                    errorMessage = "Could not fetch role"
-                                }
+                        navController.navigate("home") {
+                            popUpTo("login") { inclusive = true }
                         }
                     } else {
                         errorMessage = task.exception?.message ?: "Login failed"
                     }
                 }
-        }) {
-            Text("Login")
-        }
+        }) { Text("Login") }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Biometric login
-        BiometricLogin(
-            title = "Login with Biometrics",
-            onSuccess = {
-                // For biometrics, you’d also fetch role if you want consistency
-                val uid = auth.currentUser?.uid
-                if (uid != null) {
-                    db.child("users").child(uid).get()
-                        .addOnSuccessListener { snapshot ->
-                            val role = snapshot.child("role").value as? String ?: "Unknown"
-                            navController.navigate("${Routes.HOME}?role=$role") {
-                                popUpTo(Routes.LOGIN) { inclusive = true }
-                            }
+        biometricLogin?.let { Button(onClick = it) { Text("Login with Biometrics") } }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Google Sign-In
+        // Google Sign-In UI
+        Text("Or sign in with Google", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = {
+                scope.launch {
+                    try {
+                        val intentSender = googleAuthClient.signIn() // use the object directly
+                        intentSender?.let {
+                            launcher.launch(IntentSenderRequest.Builder(it).build())
                         }
+                    } catch (e: Exception) {
+                        errorMessage = e.message ?: "Google Sign-in failed"
+                    }
                 }
             },
-            onFailure = {
-                errorMessage = "Biometric authentication failed"
-            }
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Button(onClick = { navController.navigate(Routes.REGISTER) }) {
-            Text("Go to Register")
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Sign in with Google")
         }
 
-        if (errorMessage.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+            if (errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+            }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewLoginScreen() {
-    LoginScreen(navController = PreviewNavController())
-}

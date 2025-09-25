@@ -27,13 +27,14 @@ import com.example.plugd.ui.screens.onboarding.components.PagerIndicator
 import com.exmaple.plugd.ui.screens.theme.Dimens.MediumPadding2
 import kotlinx.coroutines.launch
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
-    navController: androidx.navigation.NavHostController, // add navController
-    onFinish: () -> Unit // add callback
+    navController: NavHostController,
+    onFinish: () -> Unit // <- remove @Composable
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         val pagerState = rememberPagerState(initialPage = 0) {
@@ -45,8 +46,8 @@ fun OnboardingScreen(
                     0 -> listOf("", "Next")
                     1 -> listOf("Back", "Next")
                     2 -> listOf("Back", "Next")
-                    3 -> listOf("Back", "Get Started")
-                    4 -> listOf("Back", "Get Started")
+                    3 -> listOf("Back", "Next")
+                    4 -> listOf("Back", "Next")
                     5 -> listOf("Back", "Get Started")
                     else -> listOf("", "")
                 }
@@ -81,37 +82,37 @@ fun OnboardingScreen(
                 .navigationBarsPadding(),
             horizontalArrangement = Arrangement.End
         ) {
-                val scope = rememberCoroutineScope()
-                if (buttonsState.value[0].isNotEmpty()) {
-                    PLUGDTextButton(
-                        text = buttonsState.value[0],
-                        onClick = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(
-                                    page = pagerState.currentPage - 1
-                                )
-                            }
-                        }
-                    )
-                }
-                PLUGDButton(
-                    text = buttonsState.value[1],
+            val scope = rememberCoroutineScope()
+            if (buttonsState.value[0].isNotEmpty()) {
+                PLUGDTextButton(
+                    text = buttonsState.value[0],
                     onClick = {
                         scope.launch {
-                            if (pagerState.currentPage == pages.lastIndex) {
-                                onFinish() // call the onFinish callback here
-                            } else {
-                                pagerState.animateScrollToPage(
-                                    page = pagerState.currentPage + 1
-                                )
-                            }
+                            pagerState.animateScrollToPage(
+                                page = pagerState.currentPage - 1
+                            )
                         }
                     }
                 )
             }
+            PLUGDButton(
+                text = buttonsState.value[1],
+                onClick = {
+                    scope.launch {
+                        if (pagerState.currentPage == pages.lastIndex) {
+                            onFinish()
+                        } else {
+                            pagerState.animateScrollToPage(
+                                page = pagerState.currentPage + 1
+                            )
+                        }
+                    }
+                }
+            )
         }
-    Spacer(modifier = Modifier.height(16.dp))
     }
+    Spacer(modifier = Modifier.height(16.dp))
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

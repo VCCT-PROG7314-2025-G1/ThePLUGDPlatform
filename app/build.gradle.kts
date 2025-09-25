@@ -56,6 +56,7 @@ dependencies {
     // Jetpack Compose & Material3
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.compose.ui:ui:1.9.1")
+    implementation(libs.androidx.material3)
     debugImplementation("androidx.compose.ui:ui-tooling:1.9.1")
     implementation("androidx.compose.foundation:foundation:1.9.1")
     implementation("androidx.compose.material3:material3:1.2.1")
@@ -87,6 +88,8 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
     // OkHttp logging
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
@@ -96,6 +99,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firestore (explicit version because KTX was dropped from BOM)
+    implementation("com.google.firebase:firebase-firestore")
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")

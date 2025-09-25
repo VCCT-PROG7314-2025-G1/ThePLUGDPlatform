@@ -5,4 +5,5 @@
     <string name="role_selection">Role Selection</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="web_client_id" translatable="false">932853900157-3i0o6nmelmbksvtojsd3jor9gltga2si.apps.googleusercontent.com</string>
 </resources>

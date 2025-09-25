@@ -8,9 +8,9 @@ data class User(
     val name: String,
     val username: String,
     val email: String,
-    val dateOfBirth: LocalDate,
+    val dateOfBirth: String,
+    val role: String? = "User",
     val profilePictureUrl: String? = null,
     val bio: String? = null,
-    val interests: List<String> = emptyList(),
-    val accountType: AccountType
+    val interests: List<String> = emptyList()
 )
