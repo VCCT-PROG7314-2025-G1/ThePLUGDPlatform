@@ -12,26 +12,18 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun MainScreenWithBottomNav(
     navController: NavController,
+    topBar: @Composable () -> Unit, // pass your custom top bar
     content: @Composable (PaddingValues) -> Unit
 ) {
     val items = BottomNavBar.items
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // 🔎 Shared search state (so top bar search works everywhere)
-    var searchQuery = ""
-
     Scaffold(
-        topBar = {
-            TopBar(
-                searchQuery = searchQuery,
-                onSearchChange = { searchQuery = it },
-                onMenuClick = { /* TODO: open filters/settings */ }
-            )
-        },
+        topBar = { topBar() }, // use the passed top bar
         bottomBar = {
             NavigationBar(
-                containerColor = Color.Transparent // Transparent background
+                containerColor = Color.Transparent
             ) {
                 items.forEach { item ->
                     val selected = currentRoute == item.route
@@ -50,12 +42,7 @@ fun MainScreenWithBottomNav(
                                 )
                             }
                         },
-                        label = {
-                            Text(
-                                item.label,
-                                color = if (selected) Color.Black else Color.Gray
-                            )
-                        },
+                        label = { Text(item.label, color = if (selected) Color.Black else Color.Gray) },
                         selected = selected,
                         onClick = {
                             if (!selected) {
@@ -67,7 +54,7 @@ fun MainScreenWithBottomNav(
                             }
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            indicatorColor = Color.Transparent // removes purple indicator behind icons
+                            indicatorColor = Color.Transparent
                         )
                     )
                 }

@@ -5,7 +5,8 @@ import com.google.firebase.database.FirebaseDatabase
 
 class FirebaseDatabaseService {
 
-    private val db = FirebaseDatabase.getInstance().reference
+    // Corrected syntax
+    private val db = FirebaseDatabase.getInstance("https://plugdapp-default-rtdb.firebaseio.com/").reference
 
     fun saveUser(user: User) {
         db.child("users").child(user.userId).setValue(user)

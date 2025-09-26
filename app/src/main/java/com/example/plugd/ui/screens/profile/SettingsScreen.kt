@@ -1,4 +1,4 @@
-package com.example.plugd.ui.screens.settings
+package com.example.plugd.ui.screens.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

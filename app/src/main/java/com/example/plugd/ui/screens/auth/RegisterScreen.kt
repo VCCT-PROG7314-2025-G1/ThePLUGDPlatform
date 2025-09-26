@@ -1,25 +1,25 @@
 package com.example.plugd.ui.screens.auth
 
+import GoogleAuthUiClient
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.plugd.ui.auth.GoogleAuthUiClient
 import com.example.plugd.ui.navigation.Routes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.example.plugd.ui.utils.PreviewNavController
 
 @Composable
-fun RegisterScreen(navController: NavHostController, role: String, googleAuthUiClient: GoogleAuthUiClient) {
+fun RegisterScreen(
+    navController: NavHostController,
+    //role: String,
+    //googleAuthUiClient: GoogleAuthUiClient
+) {
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -48,40 +48,56 @@ fun RegisterScreen(navController: NavHostController, role: String, googleAuthUiC
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = {
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val uid = auth.currentUser?.uid
-                        if (uid != null) {
-                            db.child("users").child(uid).setValue(
-                                mapOf(
-                                    "name" to name,
-                                    "username" to username,
-                                    "email" to email,
-                                    "role" to "User" // default role
-                                )
-                            )
+        Button(
+            onClick = {
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val uid = auth.currentUser?.uid
+                                if (uid != null) {
+                                    db.child("users").child(uid).setValue(
+                                        mapOf(
+                                            "name" to name,
+                                            "username" to username,
+                                            "email" to email,
+                                            "role" to "User" // default role
+                                        )
+                                    )
+                                }
+                                navController.navigate(Routes.LOGIN) {
+                                    popUpTo(Routes.REGISTER) { inclusive = true }
+                                }
+                            } else {
+                                errorMessage = task.exception?.message ?: "Registration failed"
+                            }
                         }
-                        navController.navigate(Routes.LOGIN) {
-                            popUpTo(Routes.REGISTER) { inclusive = true }
-                        }
-                    } else {
-                        errorMessage = task.exception?.message ?: "Registration failed"
-                    }
+                } else {
+                    errorMessage = "Please fill all fields"
                 }
-        }) {
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Register")
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Button(onClick = { navController.navigate(Routes.LOGIN) }) {
-            Text("Go to Login")
-        }
+        // Already have an account? Login
+        Text(
+            text = "Already have an account? Login",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable {
+                navController.navigate(Routes.LOGIN) {
+                    popUpTo(Routes.REGISTER) { inclusive = true }
+                }
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         if (errorMessage.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(10.dp))
             Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
         }
     }

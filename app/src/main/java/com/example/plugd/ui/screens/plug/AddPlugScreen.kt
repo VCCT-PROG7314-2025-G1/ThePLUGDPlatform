@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.plugd.data.EventEntity
-import com.example.plugd.ui.screens.nav.AddPlugTopBar
+import com.example.plugd.ui.screens.nav.AddTopBar
 import com.example.plugd.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
 
@@ -30,7 +30,7 @@ fun AddPlugScreen(
     var supportDocs by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { AddPlugTopBar(navController = navController) }
+        topBar = { AddTopBar(navController = navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier

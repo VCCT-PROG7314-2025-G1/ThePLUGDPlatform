@@ -11,7 +11,7 @@ import com.example.plugd.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPlugTopBar(navController: NavHostController) {
+fun AddTopBar(navController: NavHostController) {
     TopAppBar(
         title = { /* No title */ },
         navigationIcon = {

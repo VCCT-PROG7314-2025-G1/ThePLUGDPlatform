@@ -1,6 +1,10 @@
 package com.example.plugd.ui.screens.auth
 
-import android.content.IntentSender
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,114 +14,119 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.plugd.ui.auth.GoogleAuthUiClient
-import com.example.plugd.ui.screens.nav.BottomNavBar
+import com.example.plugd.R
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import com.example.plugd.ui.navigation.Routes
-import android.app.Activity
+import com.google.firebase.auth.GoogleAuthProvider
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    // JUST ADDED
     navController: NavHostController,
-    firebaseAuth: FirebaseAuth? = null,
-    googleAuthClient: GoogleAuthUiClient,
-    biometricLogin: (() -> Unit)? = null
+    onLoginSuccess: () -> Unit
 ) {
+    val context = LocalContext.current
+    val activity = context as Activity
+    val auth = FirebaseAuth.getInstance()
+
+    // Google Sign In client
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(context.getString(R.string.default_web_client_id))
+        .requestEmail()
+        .build()
+    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
+
+    // States for email & password
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val auth = firebaseAuth ?: FirebaseAuth.getInstance()
-
-    // 🔑 Place the launcher here (after scope and before UI)
+    // Launcher for Google Sign-In intent
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult()
+        contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                scope.launch {
-                    val signInResult = googleAuthClient.signInWithIntent(intent)
-                    if (signInResult.data != null) {
-                        navController.navigate(Routes.HOME) {
-                            popUpTo(Routes.LOGIN) { inclusive = true }
-                        }
-                    } else {
-                        errorMessage = signInResult.errorMessage ?: "Google Sign-in failed"
-                    }
-                }
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // Email/Password
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Login button
-        Button(onClick = {
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            Log.d("LoginScreen", "firebaseAuthWithGoogle:" + account.id)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            auth.signInWithCredential(credential)
+                .addOnCompleteListener(activity) { task ->
                     if (task.isSuccessful) {
-                        navController.navigate("home") {
-                            popUpTo("login") { inclusive = true }
-                        }
+                        Log.d("LoginScreen", "Google sign in success")
+                        onLoginSuccess()
                     } else {
-                        errorMessage = task.exception?.message ?: "Login failed"
+                        Log.w("LoginScreen", "Google sign in failed", task.exception)
                     }
                 }
-        }) { Text("Login") }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Biometric login
-        biometricLogin?.let { Button(onClick = it) { Text("Login with Biometrics") } }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Google Sign-In
-        // Google Sign-In UI
-        Text("Or sign in with Google", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                scope.launch {
-                    try {
-                        val intentSender = googleAuthClient.signIn() // use the object directly
-                        intentSender?.let {
-                            launcher.launch(IntentSenderRequest.Builder(it).build())
-                        }
-                    } catch (e: Exception) {
-                        errorMessage = e.message ?: "Google Sign-in failed"
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Sign in with Google")
+        } catch (e: ApiException) {
+            Log.w("LoginScreen", "Google sign in failed", e)
         }
+    }
 
-            if (errorMessage.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+    Scaffold { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Email input
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Password input
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Normal Login button
+            Button(
+                onClick = {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(activity) { task ->
+                            if (task.isSuccessful) {
+                                Log.d("LoginScreen", "Email login success")
+                                onLoginSuccess()
+                            } else {
+                                Log.w("LoginScreen", "Email login failed", task.exception)
+                            }
+                        }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Login")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Google Sign-In button
+            OutlinedButton(
+                onClick = {
+                    val signInIntent: Intent = googleSignInClient.signInIntent
+                    launcher.launch(signInIntent)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Sign in with Google")
             }
         }
     }
+}

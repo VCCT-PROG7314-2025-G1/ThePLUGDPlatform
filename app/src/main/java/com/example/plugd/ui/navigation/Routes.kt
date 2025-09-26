@@ -14,4 +14,10 @@ object Routes {
 
     const val SETTINGS = "settings"
 
+    const val COMMUNITY = "community_screen"
+
+    const val ACTIVITY = "activity_screen"
+
+    const val FILTER = "filter"
+
 }
