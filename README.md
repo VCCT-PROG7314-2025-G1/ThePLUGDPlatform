@@ -1,4 +1,4 @@
-# The PLUGD Application
+# The PLUGD Application 🔌
 _A Smart Platform to Discover, Connect, and Experience Events._  
 
 Created by **Emma Jae Dunn**  
