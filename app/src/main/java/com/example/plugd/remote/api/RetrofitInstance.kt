@@ -1,4 +1,4 @@
-package com.example.plugd.remote
+package com.example.plugd.remote.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

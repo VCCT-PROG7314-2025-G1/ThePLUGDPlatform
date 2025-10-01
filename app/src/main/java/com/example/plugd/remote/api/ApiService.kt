@@ -1,6 +1,6 @@
-package com.example.plugd.remote
+package com.example.plugd.remote.api
 
-import com.example.plugd.data.EventEntity
+import com.example.plugd.data.localRoom.entity.EventEntity
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

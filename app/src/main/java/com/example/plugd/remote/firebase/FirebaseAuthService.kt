@@ -1,6 +1,6 @@
 package com.example.plugd.remote.firebase
 
-import com.example.plugd.database.UserEntity
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
@@ -24,6 +24,15 @@ class FirebaseAuthService {
         } catch (e: Exception) {
             null
         }
+    }
+
+
+    // JUST ADDED
+    suspend fun loginWithCredential(credential: AuthCredential) = try {
+        val result = auth.signInWithCredential(credential).await()
+        result.user  // This is the FirebaseUser
+    } catch (e: Exception) {
+        null
     }
 
     fun logout() {

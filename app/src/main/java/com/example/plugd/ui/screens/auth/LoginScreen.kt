@@ -35,7 +35,7 @@ fun LoginScreen(
 
     // Google Sign In client
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(context.getString(R.string.default_web_client_id))
+        .requestIdToken(context.getString(R.string.web_client_id))
         .requestEmail()
         .build()
     val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)

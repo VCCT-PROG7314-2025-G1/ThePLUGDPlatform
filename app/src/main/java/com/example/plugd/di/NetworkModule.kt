@@ -1,6 +1,6 @@
 package com.example.plugd.di
 
-import com.example.plugd.remote.ApiService
+import com.example.plugd.remote.api.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
