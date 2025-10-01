@@ -11,11 +11,20 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(private val repository: ChatRepository) : ViewModel() {
 
+    private val _channels = MutableStateFlow<List<Channel>>(emptyList())
     val channels: StateFlow<List<Channel>> get() = _channels
-    private val _channels = MutableStateFlow(emptyList<Channel>())
 
-    val messages: StateFlow<List<Message>> get() = _messages
-    private val _messages = MutableStateFlow(emptyList<Message>())
+    private val _userJoinedChannels = MutableStateFlow<List<Channel>>(emptyList())
+    val userJoinedChannels: StateFlow<List<Channel>> get() = _userJoinedChannels
+
+    private val _userFeed = MutableStateFlow<List<Message>>(emptyList())
+    val userFeed: StateFlow<List<Message>> get() = _userFeed
+
+    init {
+        loadChannels()
+        loadUserJoinedChannels()
+        loadUserFeed()
+    }
 
     fun loadChannels() {
         viewModelScope.launch {
@@ -25,10 +34,18 @@ class ChatViewModel(private val repository: ChatRepository) : ViewModel() {
         }
     }
 
-    fun loadMessages(channelId: String) {
+    fun loadUserJoinedChannels() {
         viewModelScope.launch {
-            repository.getMessages(channelId).collect { list ->
-                _messages.value = list
+            repository.getUserJoinedChannels().collect { list ->
+                _userJoinedChannels.value = list
+            }
+        }
+    }
+
+    fun loadUserFeed() {
+        viewModelScope.launch {
+            repository.getUserFeed().collect { list ->
+                _userFeed.value = list
             }
         }
     }

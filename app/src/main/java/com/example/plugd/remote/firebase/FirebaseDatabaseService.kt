@@ -1,31 +1,25 @@
 package com.example.plugd.remote.firebase
 
-import com.example.plugd.model.User
 import com.google.firebase.database.FirebaseDatabase
+import com.example.plugd.model.UserProfile
 
 class FirebaseDatabaseService {
 
     // Corrected syntax
     private val db = FirebaseDatabase.getInstance("https://plugdapp-default-rtdb.firebaseio.com/").reference
 
-    fun saveUser(user: User) {
+    fun saveUser(user: UserProfile) {
         db.child("users").child(user.userId).setValue(user)
-            .addOnSuccessListener {
-                // Successfully saved
-            }
-            .addOnFailureListener { e ->
-                // Handle error
-            }
+            .addOnSuccessListener { }
+            .addOnFailureListener { e -> e.printStackTrace() }
     }
 
-    fun getUser(userId: String, onResult: (User?) -> Unit) {
+    fun getUser(userId: String, onResult: (UserProfile?) -> Unit) {
         db.child("users").child(userId).get()
             .addOnSuccessListener { snapshot ->
-                val user = snapshot.getValue(User::class.java)
+                val user = snapshot.getValue(UserProfile::class.java)
                 onResult(user)
             }
-            .addOnFailureListener {
-                onResult(null)
-            }
+            .addOnFailureListener { onResult(null) }
     }
 }
