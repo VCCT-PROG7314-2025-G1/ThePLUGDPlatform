@@ -11,11 +11,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.plugd.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileTopBar(navController: NavHostController) {
+fun ProfileTopBar(navController: NavController) {
     TopAppBar(
         title = { /* No title */ },
         navigationIcon = {

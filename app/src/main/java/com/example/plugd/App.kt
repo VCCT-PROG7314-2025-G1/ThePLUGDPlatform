@@ -2,7 +2,7 @@ package com.example.plugd
 
 import android.app.Application
 import androidx.room.Room
-import com.example.plugd.database.AppDatabase
+import com.example.plugd.data.localRoom.database.AppDatabase
 import com.google.firebase.FirebaseApp
 
 class App : Application() {
@@ -13,6 +13,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
 
         // Initialize Room database
         database = Room.databaseBuilder(

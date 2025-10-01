@@ -2,7 +2,7 @@ package com.example.plugd.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.plugd.database.UserDao
+import com.example.plugd.data.localRoom.dao.UserDao
 import com.example.plugd.remote.firebase.FirebaseAuthService
 
 class AuthViewModelFactory(private val authService: FirebaseAuthService, private val userDao: UserDao) : ViewModelProvider.Factory {

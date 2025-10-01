@@ -1,10 +1,9 @@
 package com.example.plugd.ui.auth
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.plugd.database.UserDao
-import com.example.plugd.database.UserEntity
+import com.example.plugd.data.localRoom.dao.UserDao
+import com.example.plugd.data.localRoom.entity.UserEntity
 import com.example.plugd.remote.firebase.FirebaseAuthService
 import kotlinx.coroutines.launch
 
