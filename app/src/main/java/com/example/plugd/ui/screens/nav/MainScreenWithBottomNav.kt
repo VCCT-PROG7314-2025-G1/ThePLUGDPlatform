@@ -12,21 +12,24 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun MainScreenWithBottomNav(
     navController: NavController,
-    topBar: @Composable () -> Unit, // pass your custom top bar
-    content: @Composable (PaddingValues) -> Unit
+    topBar: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
+    loggedInUserId: String // Pass the UID
 ) {
     val items = BottomNavBar.items
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
-        topBar = { topBar() }, // use the passed top bar
+        topBar = { topBar() },
         bottomBar = {
-            NavigationBar(
-                containerColor = Color.Transparent
-            ) {
+            NavigationBar(containerColor = Color.Transparent) {
                 items.forEach { item ->
-                    val selected = currentRoute == item.route
+                    val selected = when (item) {
+                        is BottomNavBar.Profile -> currentRoute?.startsWith("profile/") == true
+                        else -> currentRoute == item.route
+                    }
+
                     NavigationBarItem(
                         icon = {
                             when {
@@ -46,7 +49,12 @@ fun MainScreenWithBottomNav(
                         selected = selected,
                         onClick = {
                             if (!selected) {
-                                navController.navigate(item.route) {
+                                val routeToNavigate = when (item) {
+                                    is BottomNavBar.Profile -> "profile/$loggedInUserId"
+                                    else -> item.route
+                                }
+
+                                navController.navigate(routeToNavigate) {
                                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                                     launchSingleTop = true
                                     restoreState = true
