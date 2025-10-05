@@ -43,6 +43,7 @@
                     android:resource="@xml/file_paths" />
         </provider>
 
+
         <service
                 android:name=".remote.firebase.FirebaseMessagingService"
                 android:exported="false">

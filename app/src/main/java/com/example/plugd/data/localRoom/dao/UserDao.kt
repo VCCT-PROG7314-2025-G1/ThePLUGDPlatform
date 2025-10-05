@@ -1,12 +1,16 @@
 package com.example.plugd.data.localRoom.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.plugd.data.localRoom.entity.UserEntity
+import com.example.plugd.data.localRoom.entity.UserProfileEntity
+import kotlinx.coroutines.flow.Flow
 
 // Local database queries (RoomDB)
+
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,10 +24,4 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE userId = :userId LIMIT 1")
     suspend fun getUserById(userId: String): UserEntity?
-
-    @Query("UPDATE users SET bio = :bio, location = :location WHERE userId = :userId")
-    suspend fun updateProfile(userId: String, bio: String?, location: String?)
-
-    @Query("UPDATE users SET followersCount = :count WHERE userId = :userId")
-    suspend fun updateFollowers(userId: String, count: Int)
 }

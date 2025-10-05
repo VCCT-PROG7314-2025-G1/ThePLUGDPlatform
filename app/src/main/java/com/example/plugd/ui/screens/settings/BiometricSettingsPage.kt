@@ -8,7 +8,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.plugd.R
-import com.example.plugd.security.BiometricLogin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

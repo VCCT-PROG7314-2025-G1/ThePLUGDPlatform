@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.plugd.data.localRoom.database.AppDatabase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 
 class App : Application() {
 
@@ -24,6 +25,8 @@ class App : Application() {
 
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
+
+        val db = FirebaseFirestore.getInstance()
 
     }
 }

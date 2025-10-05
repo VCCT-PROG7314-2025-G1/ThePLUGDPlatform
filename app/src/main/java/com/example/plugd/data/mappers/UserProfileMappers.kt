@@ -1,33 +1,53 @@
 package com.example.plugd.data.mappers
 
+import com.example.plugd.data.localRoom.entity.UserProfileEntity
 import com.example.plugd.data.localRoom.entity.UserEntity
 import com.example.plugd.model.UserProfile
 
-// Convert Room entity to UI model
-fun UserEntity.toUserProfile(): UserProfile = UserProfile(
-    userId = userId,
-    name = name,
-    username = username,
-    email = email,
-    role = role,
-    phone = phone,
-    bio = bio,
-    gender = gender,
-    location = location,
-    followersCount = followersCount
-)
+fun UserEntity.toUserProfileEntity(): UserProfileEntity {
+    return UserProfileEntity(
+        userId = this.userId,
+        name = this.name,
+        username = this.username,
+        email = this.email
+    )
+}
 
-// Convert UI model back to Room entity
-fun UserProfile.toUserEntity(password: String? = null): UserEntity = UserEntity(
-    userId = userId,
-    name = name,
-    username = username,
-    email = email,
-    password = password,
-    phone = phone,
-    role = role,
-    bio = bio,
-    gender = gender,
-    location = location,
-    followersCount = followersCount
-)
+fun UserProfile.toUserProfileEntity(): UserProfileEntity {
+    return UserProfileEntity(
+        userId = this.userId,
+        name = this.name,
+        username = this.username,
+        email = this.email,
+        phone = this.phone,
+        bio = this.bio,
+        location = this.location,
+        gender = this.gender,
+        role = this.role,
+        followersCount = this.followersCount,
+        notificationsEnabled = this.notificationsEnabled,
+        darkModeEnabled = this.darkModeEnabled,
+        biometricEnabled = this.biometricEnabled,
+        pushEnabled = this.pushEnabled
+    )
+}
+
+fun UserProfileEntity.toUserProfile(): UserProfile {
+    return UserProfile(
+        userId = this.userId,
+        name = this.name ?: "",
+        username = this.username ?: "",
+        email = this.email ?: "",
+        phone = this.phone ?: "",
+        bio = this.bio ?: "",
+        location = this.location ?: "",
+        gender = this.gender ?: "",
+        role = this.role ?: "User",
+        followersCount = this.followersCount,
+        notificationsEnabled = this.notificationsEnabled,
+        darkModeEnabled = this.darkModeEnabled,
+        biometricEnabled = this.biometricEnabled,
+        pushEnabled = this.pushEnabled,
+        events = emptyList() // or map from entity if needed
+    )
+}

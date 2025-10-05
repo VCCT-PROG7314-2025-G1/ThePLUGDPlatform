@@ -2,19 +2,20 @@ package com.example.plugd.data.localRoom.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.UUID
-
-@Entity(tableName = "users_profile")
+@Entity(tableName = "user_profiles")
 data class UserProfileEntity(
-    @PrimaryKey val userId: String = UUID.randomUUID().toString(),
-    val name: String,
-    val username: String,
-    val phone: String? = null,
-    val bio: String? = null,
-    val gender: String? = null,
-    val location: String? = null,
-    val followersCount: Int = 0,
-    val notificationsEnabled: Boolean = true,
-    val darkModeEnabled: Boolean = false,
-    val biometricEnabled: Boolean = false
+    @PrimaryKey var userId: String = "",
+    var phone: String? = null,
+    var username: String? = null,
+    var name: String? = null,
+    var email: String? = null,
+    var bio: String? = null,
+    var location: String? = null,
+    var gender: String? = null,
+    var role: String? = "User",
+    var followersCount: Int = 0,
+    var notificationsEnabled: Boolean = true,
+    var darkModeEnabled: Boolean = false,
+    var biometricEnabled: Boolean = false,
+    var pushEnabled: Boolean = true
 )

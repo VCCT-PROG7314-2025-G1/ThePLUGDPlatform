@@ -1,4 +1,4 @@
-package com.example.plugd.security
+package com.example.plugd.ui.auth
 
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.Composable
