@@ -10,7 +10,5 @@ data class Event(
     val startDateTime: Instant,
     val endDateTime: Instant,
     val location: String,
-    val ticketPrice: Double,
-    val capacity: Int,
     val organizerId: String
 )

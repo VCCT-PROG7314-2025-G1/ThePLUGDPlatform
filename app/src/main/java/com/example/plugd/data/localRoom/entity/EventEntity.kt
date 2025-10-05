@@ -13,5 +13,5 @@ data class EventEntity(
     val location: String,
     val date: Long,
     val createdBy: String,
-    val supportDocs: String? = null // nullable to allow empty
+    val supportDocs: String? = null
 )

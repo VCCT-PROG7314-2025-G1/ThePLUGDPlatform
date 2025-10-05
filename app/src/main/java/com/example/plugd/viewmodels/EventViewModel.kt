@@ -28,6 +28,7 @@ class EventViewModel(private val repository: EventRepository) : ViewModel() {
         }
     }
 
+
     fun loadEvents() {
         viewModelScope.launch {
             try {
