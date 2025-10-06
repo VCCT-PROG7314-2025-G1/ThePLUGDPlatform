@@ -6,6 +6,27 @@ import java.util.UUID
 
 @Entity(tableName = "events")
 data class EventEntity(
+    @PrimaryKey
+    val eventId: String = "",          // ✅ mark as PrimaryKey
+    val name: String = "",
+    val category: String = "",
+    val description: String = "",
+    val location: String = "",
+    val date: Long = 0L,
+    val createdBy: String = "",
+    val createdByName: String = "",
+    val supportDocs: String? = null
+)
+
+
+
+
+
+
+
+
+
+/*data class EventEntity(
     @PrimaryKey val eventId: String = UUID.randomUUID().toString(),
     val name: String,
     val category: String,
@@ -14,4 +35,4 @@ data class EventEntity(
     val date: Long,
     val createdBy: String,
     val supportDocs: String? = null
-)
+    */

@@ -1,9 +1,9 @@
 package com.example.plugd.viewmodels
 
+import EventRepository
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.plugd.data.repository.EventRepository
 import com.example.plugd.data.localRoom.entity.EventEntity
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

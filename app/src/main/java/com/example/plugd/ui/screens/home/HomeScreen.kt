@@ -21,11 +21,12 @@ import java.util.*
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    eventViewModel: EventViewModel
+    eventViewModel: EventViewModel,
+    userId: String
 ) {
     val events by eventViewModel.events.collectAsState(initial = emptyList())
 
-    // Load events when screen opens
+    //Load events when screen opens
     LaunchedEffect(Unit) {
         eventViewModel.loadEvents()
     }

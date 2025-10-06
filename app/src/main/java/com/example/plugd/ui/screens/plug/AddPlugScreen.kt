@@ -24,6 +24,10 @@ import kotlinx.coroutines.launch
 import android.Manifest
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import com.google.firebase.auth.FirebaseAuth
+import java.util.UUID
 
 @Composable
 fun AddPlugScreen(
@@ -33,6 +37,8 @@ fun AddPlugScreen(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val currentUserName = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
+    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     // Remember input state
     var pluggingWhat by remember { mutableStateOf("") }
@@ -64,9 +70,11 @@ fun AddPlugScreen(
     Scaffold(
         topBar = { AddTopBar(navController = navController) }
     ) { innerPadding ->
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(innerPadding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -123,9 +131,14 @@ fun AddPlugScreen(
                 onValueChange = { location = it },
                 placeholder = "ex. 31 Bree Street Cape Town"
             )
-
-            // File picker for support docs
-            FilePickerField(supportDocs = supportDocs) { uri ->
+            Text(
+                text = "Upload Support Docs",
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            FilePickerField(
+                supportDocs = supportDocs
+            ) { uri ->
                 supportDocs = uri.toString()
             }
 
@@ -135,15 +148,43 @@ fun AddPlugScreen(
             Button(
                 onClick = {
                     val newEvent = EventEntity(
+                        eventId = UUID.randomUUID().toString(),
+                        name = plugTitle,
+                        category = plugCategory,
+                        description = plugDescription,
+                        location = location,
+                        date = System.currentTimeMillis(),
+                        createdBy = currentUserId,        // UID
+                        createdByName = currentUserName,
+                        supportDocs = supportDocs?.takeIf { it.isNotEmpty() }
+                    )
+
+                    scope.launch {
+                        try {
+                            eventViewModel.addEvent(newEvent)
+                            // Refresh events after adding
+
+                            navController.navigate(Routes.HOME) {
+                                popUpTo(Routes.HOME) { inclusive = true }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+
+                   /*  val newEvent = EventEntity(
                         eventId = System.currentTimeMillis().toString(),
                         name = plugTitle,
                         category = plugCategory,
                         description = plugDescription,
                         location = location,
                         date = System.currentTimeMillis(),
-                        createdBy = currentUserId,
+                        createdBy = currentUserId, // ✅ stores user ID
                         supportDocs = supportDocs?.takeIf { it.isNotEmpty() }
                     )
+
+
                     scope.launch {
                         try {
                             eventViewModel.addEvent(newEvent)
@@ -153,7 +194,7 @@ fun AddPlugScreen(
                         } catch (e: Exception) {
                             e.printStackTrace() // log the error to see why it crashes
                         }
-                    }
+                    }*/
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -172,7 +213,7 @@ fun InputField(label: String, value: String, onValueChange: (String) -> Unit, pl
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.bodyMedium
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(13.dp))
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,

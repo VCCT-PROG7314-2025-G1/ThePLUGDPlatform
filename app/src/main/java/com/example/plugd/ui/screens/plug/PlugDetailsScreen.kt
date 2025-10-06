@@ -76,10 +76,16 @@ fun PlugDetailsScreen(
                 text = "Location: ${event.location}",
                 style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
             )
+
+            androidx.compose.material3.Text(
+                text = "Created by: ${event.createdByName}",
+                style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+            )
+            /*
             androidx.compose.material3.Text(
                 text = "Created by: ${event.createdBy}",
                 style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
-            )
+            )*/
             androidx.compose.material3.Text(
                 text = "Date: ${SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(event.date))}",
                 style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
