@@ -8,7 +8,7 @@ Created by **Emma Jae Dunn**
 Student Number: **ST10301125**  
 Module: **Programming 3D - PROG7314**  
 
-**Youtube Demonstration Video:** (coming) 
+**Youtube Demonstration Video:** https://youtu.be/vVWdUCP0LXk
 
 **GitHub Link** https://github.com/emmajaedunn/ThePLUGDPlatform.git
 
