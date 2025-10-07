@@ -54,11 +54,11 @@ fun AppNavHost(startDestination: String = Routes.REGISTER) {
     val context = LocalContext.current
     val navController = rememberNavController()
 
-    // --- Local DB ---
+    // Local DB
     val db = AppDatabase.getInstance(context)
     val loggedInUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-    // --- Repositories ---
+    // Repositories
     val profileRepository = ProfileRepository(profileDao = db.userProfileDao())
     val authRepository = AuthRepository(
         authService = FirebaseAuthService(),
@@ -70,7 +70,7 @@ fun AppNavHost(startDestination: String = Routes.REGISTER) {
         eventRemote = EventRemoteDataSource(FirebaseFirestore.getInstance())
     )
 
-    // --- ViewModels ---
+    // ViewModels
     val authViewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(authRepository)
     )
@@ -84,10 +84,10 @@ fun AppNavHost(startDestination: String = Routes.REGISTER) {
         factory = EventViewModelFactory(eventRepository)
     )
 
-    // --- Google SSO Client ---
+    // Google SSO Client
     val googleAuthClient = remember { GoogleAuthUiClient(context) }
 
-    // --- Load profile when user is logged in ---
+    // Load profile when user is logged in
     LaunchedEffect(key1 = loggedInUserId) {
         if (loggedInUserId.isNotBlank()) {
             profileViewModel.loadProfile()
@@ -96,6 +96,7 @@ fun AppNavHost(startDestination: String = Routes.REGISTER) {
 
     NavHost(navController = navController, startDestination = startDestination) {
 
+        // --- Register Screen ---
         composable(Routes.REGISTER) {
             RegisterScreen(
                 navController = navController,
@@ -109,6 +110,7 @@ fun AppNavHost(startDestination: String = Routes.REGISTER) {
             )
         }
 
+        // --- Login Screen ---
         composable(Routes.LOGIN) {
             LoginScreen(
                 navController = navController,
@@ -122,6 +124,7 @@ fun AppNavHost(startDestination: String = Routes.REGISTER) {
             )
         }
 
+        // --- Home Screen ---
         composable(Routes.HOME) {
             MainScreenWithBottomNav(
                 navController = navController,

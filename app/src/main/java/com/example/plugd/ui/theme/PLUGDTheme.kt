@@ -12,8 +12,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.plugd.R
 
-
-// 1. Define your color palettes
 private val LightColors = lightColorScheme(
     primary = Color(0xFFFF9800),
     onPrimary = Color.White,
@@ -37,7 +35,7 @@ private val DarkColors = darkColorScheme(
     onSurface = Color.White
 )
 
-// 2.Typography
+// Typography
 
 // FontFamily definition
 val Telegraf = FontFamily(
@@ -62,10 +60,10 @@ private val AppTypography = Typography(
         fontSize = 14.sp
     )
 )
-// 3. Define your shapes
+// Shapes
 private val AppShapes = Shapes() // Default shapes
 
-// 4. Create the theme composable
+// Theme
 @Composable
 fun PLUGDTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

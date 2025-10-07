@@ -19,7 +19,7 @@ fun FilterScreen(navController: NavHostController) {
                 title = { /* No title */ },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.popBackStack() // <-- Go back to ProfileScreen
+                        navController.popBackStack()
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.btn_back),

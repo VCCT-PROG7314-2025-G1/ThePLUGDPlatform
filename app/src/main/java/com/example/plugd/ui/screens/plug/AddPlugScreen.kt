@@ -189,29 +189,6 @@ fun AddPlugScreen(
                         }
                     }
 
-
-                   /*  val newEvent = EventEntity(
-                        eventId = System.currentTimeMillis().toString(),
-                        name = plugTitle,
-                        category = plugCategory,
-                        description = plugDescription,
-                        location = location,
-                        date = System.currentTimeMillis(),
-                        createdBy = currentUserId, // ✅ stores user ID
-                        supportDocs = supportDocs?.takeIf { it.isNotEmpty() }
-                    )
-
-
-                    scope.launch {
-                        try {
-                            eventViewModel.addEvent(newEvent)
-                            navController.navigate(Routes.HOME) {
-                                popUpTo(Routes.HOME) { inclusive = true }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace() // log the error to see why it crashes
-                        }
-                    }*/
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -221,7 +198,7 @@ fun AddPlugScreen(
     }
 }
 
-// --- Reusable Input Field ---
+// Reusable Input Field
 @Composable
 fun InputField(label: String, value: String, onValueChange: (String) -> Unit, placeholder: String = "") {
     Column(modifier = Modifier.fillMaxWidth()) {

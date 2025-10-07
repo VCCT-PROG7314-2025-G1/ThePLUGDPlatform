@@ -8,12 +8,6 @@ object Routes {
     const val ABOUT_SUPPORT = "about_support"
     const val ACTIVITY = "activity_screen"
 
-
-
-
-
-
-
     const val ONBOARDING = "onboarding"
 
     const val ROLE = "role_selection"

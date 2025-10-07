@@ -154,7 +154,7 @@ fun SettingsScreen(
         )
     }
 
-    // --- Edit Field Dialog ---
+    // Edit field dialog
     if (editingField != null) {
         val field = editingField!!
         AlertDialog(

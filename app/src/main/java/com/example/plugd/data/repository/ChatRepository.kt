@@ -108,18 +108,3 @@ class ChatRepository(
         }
     }
 }
-
-    /* ---------------- SEND MESSAGE ----------------
-    suspend fun sendMessage(channelId: String, message: Message) {
-        // 1️⃣ Push to Firestore
-        db.collection("channels")
-            .document(channelId)
-            .collection("messages")
-            .add(message)
-
-        // 2️⃣ Save to Room
-        withContext(Dispatchers.IO) {
-            chatDao.insertMessage(message.toMessageEntity())
-        }
-    }
-}*/
