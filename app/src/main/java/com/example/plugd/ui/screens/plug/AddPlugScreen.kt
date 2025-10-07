@@ -24,8 +24,12 @@ import kotlinx.coroutines.launch
 import android.Manifest
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import com.example.plugd.R
 import com.google.firebase.auth.FirebaseAuth
 import java.util.UUID
 
@@ -76,9 +80,18 @@ fun AddPlugScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(innerPadding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.plugd_icon),
+                contentDescription = "PLUGD App Icon",
+                modifier = Modifier
+                    .size(200.dp)
+                    .offset(y = (-60).dp)
+            )
             // Title
             Text(
                 text = "Create a Plug",
@@ -86,7 +99,9 @@ fun AddPlugScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp
                 ),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = (-70).dp),
                 textAlign = TextAlign.Center
             )
 
@@ -94,11 +109,13 @@ fun AddPlugScreen(
             Text(
                 text = "Submit an application for services, jobs, gig opportunities & collaborative opportunities.",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = (-40).dp),
                 textAlign = TextAlign.Center
             )
 
-            Spacer(Modifier.height(18.dp))
+            Spacer(Modifier.height(1.dp))
 
             // Input Fields
             InputField(
@@ -134,7 +151,7 @@ fun AddPlugScreen(
             Text(
                 text = "Upload Support Docs",
                 fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
             FilePickerField(
                 supportDocs = supportDocs

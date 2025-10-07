@@ -60,7 +60,7 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 // Profile Image
-                val imagePainter = painterResource(id = R.drawable.placeholder_profile) // replace with remote if available
+                val imagePainter = painterResource(id = R.drawable.profile_placeholder) // Default placeholder for users
                 Image(
                     painter = imagePainter,
                     contentDescription = "Profile Picture",
@@ -103,7 +103,7 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Followers (example)
+            // Followers (default profile picture)
             Text("Followers", fontWeight = FontWeight.Bold, fontSize = 14.sp)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -111,21 +111,20 @@ fun ProfileScreen(
             ) {
                 repeat(5) {
                     Image(
-                        painter = painterResource(id = R.drawable.placeholder_profile),
+                        painter = painterResource(id = R.drawable.profile_placeholder),
                         contentDescription = "Follower",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(60.dp)
+                            .size(70.dp)
                             .clip(CircleShape)
                             .padding(4.dp)
                     )
                 }
-                Text("+50", fontSize = 13.sp, color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
-            // Music & Socials
+            // Music & Social Platforms
             Text("Music & Socials", fontWeight = FontWeight.Bold, fontSize = 14.sp)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 SocialIcon(R.drawable.ic_spotify, "Spotify")
@@ -135,7 +134,7 @@ fun ProfileScreen(
                 SocialIcon(R.drawable.ic_facebook, "Facebook")
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             // Upcoming Events
             Text("Upcoming Events", fontWeight = FontWeight.Bold, fontSize = 14.sp)
@@ -157,7 +156,7 @@ fun SocialIcon(iconRes: Int, desc: String) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = desc,
-            modifier = Modifier.size(60.dp)
+            modifier = Modifier.size(170.dp)
         )
     }
 }

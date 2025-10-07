@@ -111,6 +111,7 @@ dependencies {
 
     // Firestore (explicit version because KTX was dropped from BOM)
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")

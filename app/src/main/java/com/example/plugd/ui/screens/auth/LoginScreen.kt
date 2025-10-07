@@ -1,6 +1,7 @@
 package com.example.plugd.ui.screens.auth
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,12 +10,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.plugd.R
 import com.example.plugd.ui.auth.AuthViewModel
 import com.example.plugd.ui.auth.GoogleAuthUiClient
 import com.example.plugd.ui.navigation.Routes
+import com.example.plugd.ui.theme.Telegraf
 
 @Composable
 fun LoginScreen(
@@ -56,10 +60,43 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.plugd_icon),
+            contentDescription = "PLUGD App Icon",
+            modifier = Modifier.size(260.dp)
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        Text(
+            text = "Login",
+            style = MaterialTheme.typography.headlineSmall.copy(
+                fontFamily = Telegraf,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.W700
+            )
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        // Navigate to Register
+        Text(
+            text = "Don't have an account? Register",
+            modifier = Modifier.clickable {
+                navController.navigate(Routes.REGISTER) {
+                    popUpTo(Routes.LOGIN) { inclusive = true }
+                }
+            },
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(50.dp))
+
         // Email input
         OutlinedTextField(
             value = email,
@@ -97,18 +134,24 @@ fun LoginScreen(
             Text("Login")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         // Forgot Password link
         Text(
             text = "Forgot Password?",
             color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontFamily = Telegraf,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.W400
+            ),
             modifier = Modifier
-                .align(Alignment.End)
+                .align(Alignment.CenterHorizontally)
                 .clickable {
                     navController.navigate("reset_password")
                 }
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Divider
         HorizontalDivider(thickness = 1.dp, color = DividerDefaults.color)
@@ -124,16 +167,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Navigate to Register
-        Text(
-            text = "Don't have an account? Register",
-            modifier = Modifier.clickable {
-                navController.navigate(Routes.REGISTER) {
-                    popUpTo(Routes.LOGIN) { inclusive = true }
-                }
-            },
-            color = MaterialTheme.colorScheme.primary
-        )
 
         // Error message
         if (errorMessage.isNotEmpty()) {

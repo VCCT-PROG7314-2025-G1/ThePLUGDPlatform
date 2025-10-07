@@ -12,6 +12,7 @@ data class UserProfile(
     val gender: String? = null,
     val location: String? = null,
     val followersCount: Int = 0,
+    val profileImageUrl: String? = null,
 
     // Settings/preferences
     val notificationsEnabled: Boolean = true,

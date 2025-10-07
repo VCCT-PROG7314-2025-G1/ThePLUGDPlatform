@@ -1,6 +1,7 @@
 package com.example.plugd.ui.screens.auth
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,12 +10,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.example.plugd.R
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.plugd.ui.auth.AuthViewModel
 import com.example.plugd.ui.auth.GoogleAuthUiClient
 import com.example.plugd.ui.navigation.Routes
+import com.example.plugd.ui.theme.Telegraf
 
 @Composable
 fun RegisterScreen(
@@ -32,7 +36,6 @@ fun RegisterScreen(
     val authState by viewModel.authState.collectAsState()
     var message by remember { mutableStateOf("") }
 
-    // JUST ADDED
     val context = LocalContext.current
 
     LaunchedEffect(authState) {
@@ -58,10 +61,43 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.plugd_icon),
+            contentDescription = "PLUGD App Icon",
+            modifier = Modifier.size(260.dp)
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        Text(
+            text = "Create a New Account",
+            style = MaterialTheme.typography.headlineSmall.copy(
+                fontFamily = Telegraf,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.W700
+            )
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        // Navigate to Login
+        Text(
+            text = "Already have an account? Login",
+            modifier = Modifier.clickable {
+                navController.navigate(Routes.LOGIN) {
+                    popUpTo(Routes.REGISTER) { inclusive = true }
+                }
+            },
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(50.dp))
+
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -117,19 +153,6 @@ fun RegisterScreen(
             viewModel = viewModel,
             googleAuthClient = googleAuthClient,
             onSuccess = onRegisterSuccess
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Navigate to Login
-        Text(
-            text = "Already have an account? Login",
-            modifier = Modifier.clickable {
-                navController.navigate(Routes.LOGIN) {
-                    popUpTo(Routes.REGISTER) { inclusive = true }
-                }
-            },
-            color = MaterialTheme.colorScheme.primary
         )
 
         // Error message

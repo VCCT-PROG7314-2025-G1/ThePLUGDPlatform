@@ -1,5 +1,112 @@
 package com.example.plugd.viewmodels
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.plugd.data.repository.ChatRepository
+import com.example.plugd.model.Channel
+import com.example.plugd.model.Message
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+
+class ChatViewModel(
+    private val repository: ChatRepository,
+    val currentUserId: String
+) : ViewModel() {
+
+    // ------------------- CHANNELS -------------------
+    private val _channels = MutableStateFlow<List<Channel>>(emptyList())
+    val channels: StateFlow<List<Channel>> get() = _channels
+
+    fun loadChannels() {
+        viewModelScope.launch {
+            repository.getChannels().collect { _channels.value = it }
+        }
+    }
+
+    // ------------------- MESSAGES -------------------
+    private val _messages = MutableStateFlow<List<Message>>(emptyList())
+    val messages: StateFlow<List<Message>> get() = _messages
+
+    fun loadMessages(channelId: String) {
+        viewModelScope.launch {
+            repository.getMessages(channelId).collect { msgs ->
+                _messages.value = msgs
+            }
+        }
+    }
+
+    fun observeRealtimeMessages(channelId: String, onNewMessage: (Message) -> Unit) {
+        viewModelScope.launch {
+            repository.observeRealtimeMessages(channelId).collect { msg ->
+                if (_messages.value.none { it.id == msg.id }) {
+                    _messages.value = _messages.value + msg
+                    if (msg.senderId != currentUserId) onNewMessage(msg)
+                }
+            }
+        }
+    }
+
+    // ------------------- CURRENT USER -------------------
+    private val _currentUserName = mutableStateOf("Loading...")
+    val currentUserName: State<String> get() = _currentUserName
+
+    init {
+        viewModelScope.launch {
+            try {
+                _currentUserName.value = repository.getUserName(currentUserId)
+            } catch (e: Exception) {
+                _currentUserName.value = "Unknown"
+            }
+        }
+    }
+
+    // ------------------- SEND MESSAGE -------------------
+    fun sendMessage(channelId: String, content: String) {
+        viewModelScope.launch {
+            try {
+                // Use Firestore username
+                val username = _currentUserName.value
+
+                val message = Message(
+                    id = "",
+                    channelId = channelId,
+                    senderId = currentUserId,
+                    content = content,
+                    senderName = username,
+                    timestamp = System.currentTimeMillis()
+                )
+
+                repository.sendMessage(channelId, message)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*package com.example.plugd.viewmodels
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.plugd.data.repository.ChatRepository
@@ -70,4 +177,4 @@ class ChatViewModel(
             }
         }
     }
-}
+}*/
